@@ -1,0 +1,12 @@
+{
+  "name": "movie-database",
+  "version": "1.0.0",
+  "description": "Practice project using API REST TMDB",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "joseperaltar",
+  "license": "MIT"
+}
