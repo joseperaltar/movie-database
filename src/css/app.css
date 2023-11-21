@@ -3,6 +3,7 @@
   margin: 0;
   padding: 0;
   font-family: Montserrat, sans-serif;
+  font-size: 14px;
 }
 
 :root {
@@ -16,3 +17,122 @@
   --lg: 18px;
 }
 
+/* APP HEADER */
+
+.app-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 10px;
+}
+
+.app-title {
+  font-size: var(--fz-title);
+  color: var(--main-color);
+  align-self:flex-start;
+}
+
+/* SEARCH */ 
+
+.search-wrapper {
+  margin-top: 16px;
+  margin-left: 10px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search {
+  display: flex;
+}
+
+.search_bar {
+  height: 35px;
+  width: 265px;
+  background-color: var(--bg-color);
+  border: 1px solid var(--bg-color);
+  border-radius: 5px 0px 0px 5px;
+  padding: 10px 5px;
+}
+
+.search_bar::placeholder {
+  color: var(--text-color1);
+  font-weight: bold;
+}
+
+.search_button {
+  height: 35px;
+  width: 35px;
+  background-color: var(--main-color);
+  border: 1px solid var(--main-color);
+  border-radius: 0px 5px 5px 0px;
+}
+
+.search_button-wrapper {
+  width: 100%;
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.search_filter-button, .search_recommend-button {
+  height: 30px;
+  background-color: var(--main-color);
+  border: 1px solid var(--main-color);
+  border-radius: 5px;
+  color: var(--text-color1);
+  font-size: var(--sm);
+  font-weight: bold;
+  padding: 5px 10px;
+}
+
+/* APP BODY */ 
+
+.trending, .categories {
+  margin-top: 16px;
+  margin-left: 10px;
+}
+
+.app-subtitle {
+  font-size: var(--md);
+}
+
+.trending_list, .categories_body {
+  height: 200px;
+  display: flex;
+  justify-content: space-between;
+  overflow: scroll;
+  margin-top: 8px;
+}
+
+.movie-container {
+  margin-right: 10px;
+}
+
+.movie-container img {
+  height: 178px;
+  width: 120px;
+}
+
+/* APP FOOTER */
+
+.app-footer {
+  position: absolute;
+  bottom: 0;
+  height: 50px;
+  width: 100%;
+  background-color: var(--main-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copyright {
+  color: var(--text-color1);
+}
+
+.author {
+  text-decoration: underline;
+  font-weight: bold;
+}

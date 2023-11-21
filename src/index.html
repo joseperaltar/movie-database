@@ -10,9 +10,37 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,500;0,700;1,300;1,700&display=swap" rel="stylesheet">
+
 </head>
 <body>
-  <h1>Movie database</h1>
+  <header class="app-header">
+    <h1 class="app-title">Movie database</h1>
+
+    <div class="search-wrapper">
+      <form class="search" action="" name="search">
+        <input type="text" class="search_bar" placeholder="Search something!" required>
+        <button class="search_button">S</button>
+      </form>
+      <div class="search_button-wrapper">
+        <button class="search_recommend-button">Recommend something</button>
+        <button class="search_filter-button">Filter</button>
+      </div>
+    </div>  
+  </header>
+
+  <section class="trending">
+    <h2 class="app-subtitle">Tendencies</h2>
+    <article class="trending_list">
+    </article>
+  </section>
+  <section class="categories">
+    <h2 class="app-subtitle">Categories</h2>
+    <div class="categories_body">
+    </div>
+  </section>
+  <footer class="app-footer">
+    <p class="copyright">Made with love by <span class="author">Jose Peralta</span></p>
+  </footer>
   <script src="secrets.js"></script>
   <script src="main.js"></script>
 </body>
