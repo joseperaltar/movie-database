@@ -54,6 +54,11 @@
   border: 1px solid var(--bg-color);
   border-radius: 5px 0px 0px 5px;
   padding: 10px 5px;
+  transition: linear outline .2s;
+}
+
+.search_bar:focus {
+  outline: 1px solid var(--main-color);
 }
 
 .search_bar::placeholder {
@@ -92,13 +97,14 @@
 .trending, .categories {
   margin-top: 16px;
   margin-left: 10px;
+  margin-right: 10px;
 }
 
 .app-subtitle {
   font-size: var(--md);
 }
 
-.trending_list, .categories_body {
+.trending_list {
   height: 200px;
   display: flex;
   justify-content: space-between;
@@ -113,6 +119,19 @@
 .movie-container img {
   height: 178px;
   width: 120px;
+}
+
+.categories_list {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 8px;
+  gap: 8px;
+}
+
+.categories_list div {
+  color: var(--main-color);
+  font-weight: bold;
 }
 
 /* APP FOOTER */
