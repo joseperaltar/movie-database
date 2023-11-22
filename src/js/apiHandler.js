@@ -8,6 +8,7 @@ const api = axios.create({
 
 async function fetchInfo(endpoint) {
   const {data} = await api(endpoint);
+  console.log(endpoint);
   return data;
 }
 

@@ -1,11 +1,13 @@
 import { fetchInfo } from "./js/apiHandler.js";
-import { renderHomePage, renderMovie } from "./js/render.js";
+import { renderHomePage, renderMovie, renderSearch } from "./js/render.js";
 
 const ENDPOINTS = {
   trending: "/trending/movie/day",
   genres: "/genre/movie/list",
-  movie: "/movie/"
-}
+  movie: "/movie/",
+  queryMovie: "/search/movie?query=",
+  queryFilterMovie: "/discover/movie?with_genres="
+};
 
 async function getMovie() {
   const  re = /=[0-9]*$/g;
@@ -24,12 +26,27 @@ function navigator() {
 }
 
 async function render() {
+  window.scroll(0,0);
   if(navigator() === 'home') {
     const movies = await fetchInfo(ENDPOINTS.trending);
+    console.log(movies);
     const genres = await fetchInfo(ENDPOINTS.genres);
     renderHomePage(movies.results, genres.genres);
   } else if(navigator() === "movie") {
     renderMovie(await getMovie());
+  } else if(navigator() === "search") {
+    const  re = /=[a-zA-Z0-9]*$/g;
+    const searchQuery = location.hash.replace("#", "").match(re)[0].replace("=","");
+    const data = await fetchInfo(`${ENDPOINTS.queryMovie}?${searchQuery}`);
+    renderSearch(data.results);
+  } else if(navigator() === "categorie") {
+    const  re = /=[a-zA-Z0-9]*$/g;
+    const searchQuery = location.hash.replace("#", "").match(re)[0].replace("=","");
+    console.log(searchQuery);
+    const data = await fetchInfo(`${ENDPOINTS.queryFilterMovie}${searchQuery}`);
+    console.log(`${ENDPOINTS.queryFilterMovie}${searchQuery}`);
+    console.log(data);
+    renderSearch(data.results);
   }
 }
 
@@ -54,7 +71,8 @@ async function app() {
   app.header.title
     .addEventListener('click', ()=>location.hash = "");
   app.header.searchButton
-    .addEventListener('click', ()=>{
+    .addEventListener('click', (e)=>{
+      e.preventDefault();
       if(app.header.searchBar.value.trim() !== "") location.hash = `search=${app.header.searchBar.value.trim()}`;
     });
   app.body.viewMoreButton
