@@ -17,13 +17,15 @@
   --lg: 18px;
 }
 
+.inactive {
+  display: none;
+}
+
 /* APP HEADER */
 
 .app-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   padding: 10px 10px;
+  width: 100%;
 }
 
 .app-title {
@@ -35,12 +37,12 @@
 /* SEARCH */ 
 
 .search-wrapper {
-  margin-top: 16px;
-  margin-left: 10px;
+  margin: 16px auto;
   width: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 .search {
@@ -81,7 +83,7 @@
   justify-content: space-between;
 }
 
-.search_filter-button, .search_recommend-button {
+.button {
   height: 30px;
   background-color: var(--main-color);
   border: 1px solid var(--main-color);
@@ -102,6 +104,13 @@
 
 .app-subtitle {
   font-size: var(--md);
+}
+
+.trending_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .trending_list {
@@ -137,14 +146,13 @@
 /* APP FOOTER */
 
 .app-footer {
-  position: absolute;
-  bottom: 0;
   height: 50px;
   width: 100%;
   background-color: var(--main-color);
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 10px;
 }
 
 .copyright {
@@ -154,4 +162,68 @@
 .author {
   text-decoration: underline;
   font-weight: bold;
+}
+
+/* Movies */
+
+.back_button {
+  font-size: 32px;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: var(--text-color1);
+}
+
+.movie_banner {
+  position: relative;
+}
+
+.banner_image {
+  width: 100%;
+}
+
+.banner_blur {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #0000003d;
+}
+
+.movie_information {
+  position: relative;
+}
+
+.movie_information__header {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  top: -10px;
+  background-color: #FFF;
+  border-radius: 10px;
+  width: 100%;
+  padding: 32px 24px 0px 24px;
+}
+
+.movie_title {
+  font-size: var(--lg);
+}
+
+.movie_overview {
+  margin: 48px 10px 0 10px;
+  font-size: var(--md);
+}
+
+.movie_genres {
+  margin-top: 8px;
+  margin: 8px 10px;
+  max-width: 100vw;
+}
+
+.genre {
+  display: inline-block;
+  margin-left: 10px;
+  color: var(--main-color);
+  font-weight: bold;
+  font-size: var(--md);
 }
