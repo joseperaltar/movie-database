@@ -13,13 +13,16 @@
 
 </head>
 <body>
+
+  <!-- HEADER -->
+
   <header class="app-header">
     <h1 class="app-title">Movie database</h1>
 
     <div class="search-wrapper">
       <form class="search" action="" name="search">
         <input type="text" class="search_bar" placeholder="Search something!" required>
-        <button class="search_button">S</button>
+        <button class="search_button">🔎</button>
       </form>
       <div class="search_button-wrapper">
         <button class="search_recommend button">Recommend something</button>
@@ -28,54 +31,96 @@
     </div>  
   </header>
 
-  <section class="trending">
-    <div class="trending_header">
-      <h2 class="app-subtitle">Trending movies</h2>
-      <button class="trending_view-more button">View more</button>
-    </div>
-    <article class="trending_list">
-    </article>
-  </section>
-  <section class="categories">
-
-    <h2 class="app-subtitle">Categories</h2>
-    <article class="categories_list">
-    </article>
-  </section>
-  
-  <section class="movie">
-    <span class="back_button"> < </span>
-    <img class="banner_image" alt="">
-
-    <div class="movie_information">
-      <div class="movie_information__header">
-        <h3 class="movie_title"></h3>
-        <p class="movie_rating"></p>
-      </div>
-      
-      <p class="movie_overview"></p>
-      <div class="movie_genres">
-
-      </div>
-
-      <div class="recommendations">
-    
+  <section class="filter-modal inactive">
+    <div class="filter-wrapper">
+      <h2 class="app-subtitle">Choose your search filters</h2>
+      <fieldset class="filter-genre">
+        <label>Genre</label>
+        <select name="" class="genre-list">
+          <option value="" disabled selected>-Choose a genre-</option>
+        </select>
+      </fieldset>
+      <div class="filter-buttons">
+        <button class="filter-apply button">Apply</button>
+        <button class="filter-cancel button"> Cancel</button>
       </div>
     </div>
   </section>
-  
-  <section class="search-result">
-    <div class="search_wrapper">
-      <article class="movie-list">
 
+  <div class="wrapper">
+    <!-- TRENDING SECTION -->
+  
+    <section class="trending">
+      <div class="trending_header">
+        <h2 class="app-subtitle">Trending movies</h2>
+        <button class="trending_view-more button">View more</button>
+      </div>
+      <article class="trending_list">
       </article>
-    </div>
+    </section>
+  
+    <!-- CATEGORIES SECTION -->
+  
+    <section class="categories">
+  
+      <h2 class="app-subtitle">Categories</h2>
+      <article class="categories_list">
+      </article>
+    </section>
+    
+    <!-- MOVIE DETAILS SECTION -->
+  
+    <section class="movie">
+      <span class="back_button"> < </span>
+      <img class="banner_image" alt="">
+  
+      <div class="movie_information">
+        <div class="movie_information__header">
+          <h3 class="movie_title"></h3>
+          <p class="movie_rating"></p>
+        </div>
+        
+        <p class="movie_overview"></p>
+        <div class="movie_genres">
+  
+        </div>
+  
+        <div class="recommendations">
+      
+        </div>
+      </div>
+    </section>
+    
+    <!-- SEARCH RESULTS SECTION -->
+  
+    <section class="search-result">
+      <div class="search_wrapper">
+        <p class="error inactive">We couldn't find what you searched, sorry!</p>
+        <article class="movie-list">
+  
+        </article>
+      </div>
+    </section>
+  
+    <!-- TRENDING MOVIES PAGE-->
+  
+    <section class="trending_result">
+      <div class="trending_wrapper">
+        <article class="movie-list">
+  
+        </article>
+      </div>
+    </section>
+  </div>
 
-  </section>
+  <!-- FOOTER -->
 
   <footer class="app-footer">
     <p class="copyright">Made with love by <span class="author">Jose Peralta</span></p>
   </footer>
+
+  <!-- IMPORTS JS -->
+
   <script src="secrets.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script type="module" src="main.js"></script>

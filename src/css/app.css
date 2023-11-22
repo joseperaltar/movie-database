@@ -7,14 +7,22 @@
 }
 
 :root {
-  --main-color: #FA5555;
+  --main-color: #B80B06;
   --text-color1: #FFF;
   --text-color2: #000;
-  --bg-color: #FFCDCD;
+  --bg-color: #FFD5D4;
   --fz-title: 20px;
   --sm: 14px;
   --md: 16px;
   --lg: 18px;
+}
+
+body, html{
+  height: 100%;
+}
+
+.wrapper {
+  min-height: 100%;
 }
 
 .inactive {
@@ -24,6 +32,7 @@
 /* APP HEADER */
 
 .app-header {
+  position: relative;
   padding: 10px 10px;
   width: 100%;
 }
@@ -190,6 +199,7 @@
   display: flex;
   justify-content: space-between;
   background-color: #FFF;
+  position: absolute;
   top: -10px;
   border-radius: 10px;
   width: 100%;
@@ -202,7 +212,7 @@
 
 .movie_overview {
   position: relative;
-  padding: 20px 10px 0 10px;
+  padding: 48px 10px 0 10px;
   font-size: var(--md);
 }
 
@@ -222,7 +232,7 @@
 
 /* Search */
 
-.search_wrapper {
+.search_wrapper, .trending_wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -234,4 +244,55 @@
   grid-template-columns: repeat(2, 1fr);
   justify-items: center;
   gap: 10px;
+}
+
+/* Filter */
+
+.filter-modal {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #00000054;
+}
+
+.filter-wrapper {
+  position: absolute;
+  width: 300px;
+  height: 160px;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #fff;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  text-align: center;
+}
+
+.filter-genre {
+  display: flex;
+  align-items: center;
+  width: auto;
+  border: none;
+  margin-top: 20px;
+  font-size: var(--sm);
+}
+
+.genre-list {
+  margin-left: 8px;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.genre-list:focus {
+  border: none;
+  outline: 1px solid var(--main-color);
+}
+
+.filter-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
 }

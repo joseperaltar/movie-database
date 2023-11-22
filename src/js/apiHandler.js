@@ -6,9 +6,8 @@ const api = axios.create({
   }
 });
 
-async function fetchInfo(endpoint) {
-  const {data} = await api(endpoint);
-  console.log(endpoint);
+async function fetchInfo(endpoint, query) {
+  const {data} = query !== "" ? await api(endpoint, {params: query}): await api(endpoint);
   return data;
 }
 

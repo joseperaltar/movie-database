@@ -1,9 +1,5 @@
-function renderHeader() {
-  document.querySelector(".app-header").classList.remove("inactive");
-}
-
-function renderTrendingMoviesPreview(movies) {
-  let trendingList = document.querySelector(".trending_list");
+function renderMovies(movies, container) {
+  container.innerHTML = '';
 
   const movieEL = movies.map(movie => {
     const movieContainer = document.createElement("div");
@@ -14,15 +10,27 @@ function renderTrendingMoviesPreview(movies) {
 
     movieContainer.append(movieImage);
 
-    movieImage.addEventListener("click", ()=> location.hash = `movie=${movie.id}`);
-
+    movieImage.dataset.id = movie.id;
     return movieContainer;
   });
 
-  trendingList.append(...movieEL);
+  container.addEventListener("click", (e)=>{
+    if(e.target.tagName === "IMG") {
+      location.hash = `movie=${e.target.dataset.id}`;
+    }
+  })
+  container.append(...movieEL);
 }
 
-function renderCategories(genres) {
+function renderTrendingMoviesPreview(movies) {
+  let trendingList = document.querySelector(".trending_list");
+  renderMovies(movies, trendingList);
+}
+
+function renderCategories(genres, categoriesList = document.querySelector(".categories_list")) {
+
+  categoriesList.innerHTML = "";
+
   const categoriesEL = genres.map(genre => {
     const genreContainer = document.createElement("div");
     const genreTitle = document.createElement("p");
@@ -36,10 +44,19 @@ function renderCategories(genres) {
     return genreContainer;
   })
 
-  document.querySelector(".categories_list").append(...categoriesEL);
+  categoriesList.append(...categoriesEL);
 }
 
-function renderMovie(movie) {
+function toggleFilters() {
+
+  const modal = document.querySelector(".filter-modal");
+
+  modal.classList.contains("inactive") ? 
+    modal.classList.remove("inactive"):
+    modal.classList.add("inactive");
+}
+
+function renderMovieDetails(movie) {
   const movieEL = {
     banner: document.querySelector(".banner_image"),
     poster: document.querySelector(".movie_poster"),
@@ -65,8 +82,8 @@ function renderMovie(movie) {
   document.querySelector(".categories").classList.add('inactive');
   document.querySelector(".movie").classList.remove('inactive');
   document.querySelector(".app-header").classList.add("inactive");
-  document.querySelector(".search").classList.add('inactive');
   document.querySelector(".search-result").classList.add('inactive');
+  document.querySelector(".trending_result").classList.add('inactive');
 }
 
 function renderHomePage(movies, genres) {
@@ -75,41 +92,38 @@ function renderHomePage(movies, genres) {
   document.querySelector(".app-header").classList.remove("inactive");
   document.querySelector(".movie").classList.add('inactive');
   document.querySelector(".search-result").classList.add('inactive');
+  document.querySelector(".trending_result").classList.add('inactive');
 
-  document.querySelector(".trending_list").innerHTML = '';
-  document.querySelector(".categories_list").innerHTML = '';
-  renderHeader();
   renderTrendingMoviesPreview(movies);
   renderCategories(genres);
-
 }
 
 function renderSearch(movies) {
-  let movieList = document.querySelector(".movie-list");
+  let movieList = document.querySelector(".search_wrapper .movie-list");
+  movieList.innerHTML = "";
+  document.querySelector(".search_wrapper .error").classList.add("inactive");
+  movies.length !== 0 ? 
+    renderMovies(movies, movieList):
+    document.querySelector(".search_wrapper .error").classList.remove("inactive");
 
-  movieList.innerHTML = '';
-  const movieEL = movies.map(movie => {
-    const movieContainer = document.createElement("div");
-    const movieImage = document.createElement("img");
-
-    movieContainer.classList.add('movie-container');
-    movieImage.src = `https://image.tmdb.org/t/p/w300${movie.poster_path}`
-
-    movieContainer.append(movieImage);
-
-    movieImage.addEventListener("click", ()=> location.hash = `movie=${movie.id}`);
-
-    return movieContainer;
-  });
-
-  movieList.append(...movieEL);
-
+  
   document.querySelector(".app-header").classList.remove("inactive");
   document.querySelector(".trending").classList.add('inactive');
   document.querySelector(".categories").classList.add('inactive');
   document.querySelector(".search-result").classList.remove('inactive');
   document.querySelector(".movie").classList.add('inactive');
-  document.querySelector(".search").classList.remove('inactive');
 }
 
-export { renderHomePage, renderMovie, renderSearch };
+function renderTrendings(movies) {
+  let movieList = document.querySelector(".trending_wrapper .movie-list");
+  renderMovies(movies, movieList);
+
+  document.querySelector(".trending_result").classList.remove("inactive");
+  document.querySelector(".app-header").classList.remove("inactive");
+  document.querySelector(".trending").classList.add('inactive');
+  document.querySelector(".categories").classList.add('inactive');
+  document.querySelector(".search-result").classList.remove('inactive');
+  document.querySelector(".movie").classList.add('inactive');
+}
+
+export { renderHomePage, renderMovieDetails, renderSearch, renderTrendings, toggleFilters };
