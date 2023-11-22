@@ -5,7 +5,7 @@ function renderMovies(movies, container) {
     const movieContainer = document.createElement("div");
     const movieImage = document.createElement("img");
 
-    movieContainer.classList.add('movie-container');
+    movieContainer.classList.add('movie');
     movieImage.src = `https://image.tmdb.org/t/p/w300${movie.poster_path}`
 
     movieContainer.append(movieImage);
@@ -22,12 +22,7 @@ function renderMovies(movies, container) {
   container.append(...movieEL);
 }
 
-function renderTrendingMoviesPreview(movies) {
-  let trendingList = document.querySelector(".trending_list");
-  renderMovies(movies, trendingList);
-}
-
-function renderCategories(genres, categoriesList = document.querySelector(".categories_list")) {
+function renderCategories(genres, categoriesList) {
 
   categoriesList.innerHTML = "";
 
@@ -40,7 +35,7 @@ function renderCategories(genres, categoriesList = document.querySelector(".cate
 
     genreContainer.append(genreTitle);
 
-    genreContainer.addEventListener("click", ()=> location.hash = `categorie=${genre.id}`)
+    genreContainer.addEventListener("click", ()=> location.hash = `categorie=${genre.id}-${genre.name}`)
     return genreContainer;
   })
 
@@ -58,12 +53,9 @@ function toggleFilters() {
 
 function renderMovieDetails(movie) {
   const movieEL = {
-    banner: document.querySelector(".banner_image"),
-    poster: document.querySelector(".movie_poster"),
+    banner: document.querySelector(".movie_banner"),
     title: document.querySelector(".movie_title"),
     rating: document.querySelector(".movie_rating"),
-    release_date: document.querySelector(".movie_release-date"),
-    genres: document.querySelector(".movie_genres"),
     overview: document.querySelector(".movie_overview")
   }
   
@@ -71,31 +63,12 @@ function renderMovieDetails(movie) {
   movieEL.title.innerText = `${movie.original_title} (${movie.release_date.slice(0,4)})`;
   movieEL.rating.innerText = movie.vote_average.toFixed(1)+ ` ⭐`;
   movieEL.overview.innerText = movie.overview;
-  movie.genres.forEach(genre => {
-    let element = document.createElement('p');
-    element.innerText = genre.name;
-    element.classList.add('genre');
-    movieEL.genres.append(element);
-  });
-
-  document.querySelector(".trending").classList.add('inactive');
-  document.querySelector(".categories").classList.add('inactive');
-  document.querySelector(".movie").classList.remove('inactive');
-  document.querySelector(".app-header").classList.add("inactive");
-  document.querySelector(".search-result").classList.add('inactive');
-  document.querySelector(".trending_result").classList.add('inactive');
-}
-
-function renderHomePage(movies, genres) {
-  document.querySelector(".trending").classList.remove('inactive');
-  document.querySelector(".categories").classList.remove('inactive');
-  document.querySelector(".app-header").classList.remove("inactive");
-  document.querySelector(".movie").classList.add('inactive');
-  document.querySelector(".search-result").classList.add('inactive');
-  document.querySelector(".trending_result").classList.add('inactive');
-
-  renderTrendingMoviesPreview(movies);
-  renderCategories(genres);
+  // movie.genres.forEach(genre => {
+  //   let element = document.createElement('p');
+  //   element.innerText = genre.name;
+  //   element.classList.add('genre');
+  //   movieEL.genres.append(element);
+  // });
 }
 
 function renderSearch(movies) {
@@ -126,4 +99,4 @@ function renderTrendings(movies) {
   document.querySelector(".movie").classList.add('inactive');
 }
 
-export { renderHomePage, renderMovieDetails, renderSearch, renderTrendings, toggleFilters };
+export { renderMovies, renderCategories, renderSearch, renderMovieDetails};
