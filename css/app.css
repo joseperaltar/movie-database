@@ -14,6 +14,11 @@
   --lighter-salmon: #F79F9C;
   --text-color1: #FFF;
   --text-color2: #000;
+  --bg-color: #332B2A;
+
+  /* Gradients */
+
+  --titles: linear-gradient(90deg, #B80B06 0%, #F79F9C 100%);
 
   /* Font sizes */
 
@@ -49,10 +54,6 @@ article {
   margin-top: var(--child-margins);
 }
 
-.inactive {
-  display: none;
-}
-
 .button {
   padding: var(--button-padding);
   background-color: var(--main-color);
@@ -66,6 +67,9 @@ article {
 .subtitle {
   font-size: var(--lg);
   font-weight: bold;
+  background: var(--titles);
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 .movie {
@@ -76,22 +80,48 @@ article {
   width: 120px;
 }
 
+.movie .movie_title {
+  font-weight: bold;
+}
+
+.movie .movie_release-date {
+  font-size: var(--sm);
+}
+
+/* nav */
+
+.barnav {
+  position: fixed;
+  display: flex;
+  height: 60px;
+  width: 100%;
+  align-items: center;
+  background-color: var(--bg-color);
+  padding: var(--page-padding);
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
 /* HEADER STYLES */
 
 .app-header{
   width: 100%;
   padding: var(--page-padding) var(--page-padding) 0;
+  margin-top: 60px;
 }
 
-.app-header h1{
-  color: var(--main-color);
+.barnav h1{
+  background: var(--titles);
+  -webkit-background-clip: text;
+  color: transparent;
   font-size: var(--title);
 }
 
-.search_bar-wrapper {
+.search{
   display: flex;
   width: 100%;
-  margin-top: var(--child-margins);
+  margin-top: var(--section-margins);
 }
 
 .search_bar {
@@ -116,32 +146,30 @@ article {
   border-radius: 0 var(--radius) var(--radius) 0;
 }
 
-.search_filter-wrapper {
-  display: flex;
-  width: 100%;
-  justify-content: flex-end;
-  margin-top: 8px;
-}
-
-.search_filter {
-  margin-right: 8px;
-  border-radius: var(--radius);
-}
-
-.search_filter:focus {
-  border: 1px solid var(--main-color);
-  outline: 1px solid var(--main-color);
-}
-
 /* Trending preview */
 
-.trending-preview_list {
+.trending-preview, .popular-preview {
+  position: relative;
+  margin-top:var(--section-margins) ;
+}
+
+.trending-preview::after, .popular-preview::after {
+  position: absolute;
+  content: "";
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.00) -161.19%, rgba(255, 255, 255, 0.00) 13.3%, #FFF 94.83%);
+  top: 0;
+  right: 0;
+}
+
+.trending-preview_list, .popular-preview_list {
   display: grid;
   grid-auto-flow: column;
   overflow: scroll;
 }
 
-.trending-preview_list::-webkit-scrollbar {
+.trending-preview_list::-webkit-scrollbar, .popular-preview_list::-webkit-scrollbar {
   display: none;
 }
 
@@ -151,30 +179,11 @@ article {
   justify-content: space-between;
 }
 
-.trending-preview_list .movie {
+.trending-preview_list .movie, .popular-preview_list .movie {
   margin-right: 8px;
 }
 
-/* Categories preview */
 
-.categories-preview_list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  align-items: center;
-}
-
-
-.categorie-container {
-  display: inline-block;
-  background-color: var(--lighter-salmon);
-  padding: var(--button-padding);
-  border-radius: var(--radius);
-  color: var(--text-color1);
-  font-weight: bold;
-  font-size: var(--sm);
-  text-align: center;
-}
 
 /* Search */
 
@@ -188,9 +197,12 @@ article {
 /* Movie Details */
 
 .movie-details {
-  position: relative;
+  position: absolute;
+  background-color: white;
   padding: 0;
   margin-top: 0;
+  top: 0;
+  z-index: 12;
 }
 
 .movie_banner {
@@ -199,6 +211,7 @@ article {
 
 .movie_information {
   position: relative;
+  background-color: white;
 }
 
 .movie_information_header {
@@ -232,7 +245,9 @@ footer {
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin: var(--section-margins) 0;
+  margin: var(--section-margins) 0 0 0;
+  background-color: var(--bg-color);
+  height: 60px;
 }
 
 footer p {
@@ -242,4 +257,58 @@ footer p {
 footer p span {
   font-weight: bold;
   text-decoration: underline;
+}
+
+/* Animations */
+
+.hide {
+  animation: hidebar .2s linear forwards;
+}
+
+.show {
+  animation: showbar .2s linear forwards;
+}
+
+.slidein {
+  animation: slidein .2s linear forwards;
+}
+
+.slideout {
+  animation: slideout .2s linear forwards;
+}
+
+@keyframes hidebar {
+  from {
+      top: 0;
+  }
+  to {
+      top: -60px
+  }
+}
+
+@keyframes showbar {
+  from {
+    top: -60px;
+  }
+  to {
+      top: 0;
+  }
+}
+
+@keyframes slidein {
+  from {
+    top: 100vh;
+  }
+  to {
+    top: 0;
+  }
+}
+
+@keyframes slideout {
+  from {
+    top: 0;
+  }
+  to {
+    top: 100vh;
+  }
 }
