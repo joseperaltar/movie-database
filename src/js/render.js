@@ -41,7 +41,7 @@ function renderMovieDetails(movie) {
   }
   
   movieEL.banner.src = `https://image.tmdb.org/t/p/w300${movie.poster_path}`
-  movieEL.title.innerText = `${movie.original_title} (${movie.release_date.slice(0,4)})`;
+  movieEL.title.innerText = movie.original_title;
   movieEL.rating.innerText = movie.vote_average.toFixed(1)+ ` ⭐`;
   movieEL.overview.innerText = movie.overview;
 }

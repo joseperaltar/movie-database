@@ -121,6 +121,7 @@ const App = {
     renderMovies(popularMovies.results, App.$.popularPreviewList);
     App.showHeader(true);
     App.showHome(true);
+    App.showFooter(true);
     App.showSearch(false);
     App.showMovieDetails(false);
   },
