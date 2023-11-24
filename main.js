@@ -1,5 +1,5 @@
 import { fetchInfo } from "./js/apiHandler.js";
-import { renderMovieDetails, renderMovies } from "./js/render.js";
+import { renderMoviePreview, renderMovies, renderMovieInformation } from "./js/render.js";
 import { navigator } from "./js/navigator.js";
 
 const ENDPOINTS = {
@@ -12,36 +12,21 @@ const ENDPOINTS = {
 
 let history = {
   oldUrl: "",
-  newUrl: ""
+  newUrl: "",
+  scroll: ""
 };
 
 function bindExternalEvents() {
-  let scroll = window.scrollY;
-  document.addEventListener("animationend", (e)=>{
-    if(e.animationName === "slidein") {
-      window.scroll(0,0);
-      App.showFooter(false);
-      App.showHeader(false);
-      App.showHome(false);
-      App.showSearch(false);
-    }
-  });
-  document.addEventListener("animationstart", (e)=>{
-    if(e.animationName === "slideout") {
-      App.showFooter(true);
-      App.showHeader(true);
-      App.showHome(true);
-    }
-  })
+  history.scroll = window.scrollY;
   window.addEventListener("scroll", ()=>{
-    if(window.scrollY > scroll) {
+    if(window.scrollY > history.scroll && window.scrollY >= 40) {
       App.$.barnav.classList.add("hide");
       App.$.barnav.classList.remove("show");
-    } else {
+    } else if (window.scrollY >= 40) {
       App.$.barnav.classList.remove("hide");
       App.$.barnav.classList.add("show");
     }
-    scroll = window.scrollY
+    history.scroll = window.scrollY;
   });
   window.addEventListener("hashchange", (e)=>{
     const re = /#.*$/g;
@@ -60,14 +45,6 @@ const API = {
     const movies = await fetchInfo(endpoint, query);
     return movies.results;
   },
-  fetchGenres: async ()=>{
-    const genres = await fetchInfo(ENDPOINTS.genres);
-    return genres.genres
-  },
-  fetchMoviesWithGenre: async(categorie) => {
-    const movies = await fetchInfo(ENDPOINTS.queryFilterMovie, {with_genres: categorie});
-    return movies.results;
-  }
 }
 
 async function getParams() {
@@ -82,7 +59,7 @@ async function getParams() {
 
 const App = {
   $: {
-    header: document.querySelector(".app-header"),
+    search: document.querySelector(".search"),
     barnav: document.querySelector(".barnav"),
     title: document.querySelector(".barnav h1"),
     searchButton: document.querySelector(".search_button"),
@@ -94,12 +71,28 @@ const App = {
     searchResults: document.querySelector(".search-results"),
     searchResultsList: document.querySelector(".search-results_list"),
     searchResultTitle: document.querySelector(".search-results .subtitle"),
+    recommendMovies: document.querySelector(".recommendations-preview"),
+    recommendMoviesList: document.querySelector(".recommendations-preview_list"),
     movieDetails: document.querySelector(".movie-details"),
+    movieInformation: document.querySelector(".movie-information"),
+    viewMoreButton: document.querySelector(".view-more"),
     backButton: document.querySelector(".back_button"),
     footer: document.querySelector(".footer"),
   },
-  showHeader: (show)=>{
-    App.$.header.style.display = show ? "block" : "none";
+
+  context: {trendingMovies: [], popularMovies: [], searchedMovies: [], recommendMovies: []},
+  setContext: (contextKey, newContextValue) => {
+    App.context[contextKey] = newContextValue;
+  },
+
+
+  showSearchBar: (show)=>{
+    App.$.search.style.display = show ? "flex" : "none";
+  },
+  showBarnav: (show)=>{
+    App.$.barnav.style.display = show ? "flex" : "none";
+    App.$.barnav.classList.remove("hide");
+    App.$.barnav.classList.remove("show");
   },
   showHome: (show)=>{
     App.$.trendingPreview.style.display = show ? "block" : "none";
@@ -111,47 +104,75 @@ const App = {
   showFooter: (show)=>{
     App.$.footer.style.display = show ? "flex" : "none";
   },
-  showMovieDetails: (show)=>{
+  showMoviePreview: (show)=>{
     App.$.movieDetails.style.display = show ? "block" : "none";
   },
+  showMovieInformation: (show)=>{
+    App.$.movieInformation.style.display = show ? "block" : "none";
+  },
   renderHome: async ()=>{
-    const trendingMovies = await API.fetchMovies("");
-    const popularMovies = await fetchInfo(ENDPOINTS.movie+"popular");
-    renderMovies(trendingMovies, App.$.trendingPreviewList);
-    renderMovies(popularMovies.results, App.$.popularPreviewList);
-    App.showHeader(true);
+    App.showSearchBar(true);
+    App.showBarnav(true);
     App.showHome(true);
     App.showFooter(true);
     App.showSearch(false);
-    App.showMovieDetails(false);
+    App.showMoviePreview(false);
+    App.showMovieInformation(false);
+
+    const trendingMovies = await API.fetchMovies("");
+    const popularMovies = await fetchInfo(ENDPOINTS.movie+"popular");
+
+    App.setContext("trendingMovies", trendingMovies);
+    App.setContext("popularMovies", popularMovies.results);
+
+    renderMovies(App.context.trendingMovies, App.$.trendingPreviewList);
+    renderMovies(App.context.popularMovies, App.$.popularPreviewList);
   },
   renderSearch: async () => {
-    const params = await getParams()
-    const movies = await API.fetchMovies({"query": params.search});
-    renderMovies(movies, App.$.searchResultsList);
-    App.$.searchResultTitle.innerText = `Showing results for ${params.search}`;
-    App.showHeader(true);
-    App.showHome(false);
+    App.showBarnav(true);
+    App.showSearchBar(true);
     App.showSearch(true);
-    App.showMovieDetails(false);
+    App.showHome(false);
+    App.showMoviePreview(false);
+    App.showMovieInformation(false);
+    const params = await getParams()
+    App.setContext("searchedMovies", await API.fetchMovies({"query": params.search}));
+    renderMovies(App.context.searchedMovies, App.$.searchResultsList);
+    App.$.searchResultTitle.innerText = `Showing results for ${params.search}`;
   },
   renderMovie: async ()=>{
+    App.showBarnav(true);
+    App.showFooter(true);
+    App.showMovieInformation(true);
+    App.showSearchBar(false);
+    App.showMoviePreview(false);
+    App.showSearch(false);
+    App.showHome(false);
     const params = await getParams();
     const movie = await fetchInfo(ENDPOINTS.movie+params.movie);
-    renderMovieDetails(movie);
-    App.showMovieDetails(true)
+    const recommendedMovies = await fetchInfo(ENDPOINTS.movie+params.movie+"/recommendations");
+    App.setContext("recommendMovies", recommendedMovies.results)
+    renderMovieInformation(movie);
+    renderMovies(recommendedMovies.results, App.$.recommendMoviesList);
   },
   bindEvents: () => {
+    /* Home redirect */
+
     App.$.title.addEventListener("click", ()=>location.hash = "");
+
+    /* Search Redirect */
+
     App.$.searchButton.addEventListener("click", (e)=>{
       e.preventDefault();
       if(App.$.searchBar.value.trim() !== "") location.hash = `search=${App.$.searchBar.value.trim()}`;
       App.$.searchBar.value = "";
     });
+
+    /* Open & close movie preview events */
+
     App.$.backButton.addEventListener("click", ()=>{{
       App.$.movieDetails.classList.add("slideout");
       App.$.movieDetails.classList.remove("slidein");
-      location.href = history.oldUrl;
     }});
     App.$.trendingPreviewList.addEventListener("click", ()=>{
       App.$.movieDetails.classList.remove("slideout");
@@ -165,21 +186,52 @@ const App = {
       App.$.movieDetails.classList.add("slidein");
       App.$.movieDetails.classList.remove("slideout")
     });
+    App.$.trendingPreviewList.addEventListener("click", (e)=>{
+      if(e.target.tagName === "IMG") {
+       const movie = App.context.trendingMovies.find((movie)=>movie.id === Number(e.target.dataset.id));
+       renderMoviePreview(movie);
+       App.showMoviePreview(true);
+      }
+    });
+    App.$.popularPreviewList.addEventListener("click", (e)=>{
+      if(e.target.tagName === "IMG") {
+       const movie = App.context.popularMovies.find((movie)=>movie.id === Number(e.target.dataset.id));
+       renderMoviePreview(movie);
+       App.showMoviePreview(true);
+      }
+    });
+    App.$.searchResultsList.addEventListener("click", (e)=>{
+      if(e.target.tagName === "IMG") {
+       const movie = App.context.searchedMovies.find((movie)=>movie.id === Number(e.target.dataset.id));
+       renderMoviePreview(movie);
+       App.showMoviePreview(true);
+      }
+    });
+    App.$.recommendMoviesList.addEventListener("click", (e)=>{
+      if(e.target.tagName === "IMG") {
+       const movie = App.context.recommendMovies.find((movie)=>movie.id === Number(e.target.dataset.id));
+       renderMoviePreview(movie);
+       App.showMoviePreview(true);
+      }
+    });
   },
+
   selecView: async ()=>{
     navigator() === "home" ? await App.renderHome() : 
     navigator() === "movie" ? await App.renderMovie() : 
     navigator() === "search" ? await App.renderSearch() : App.render404();
   },
+
   render: ()=>{
     App.selecView();
   },
+
   init: async ()=>{
     if(history.oldUrl === "") {
-      App.showHeader(false);
+      App.showSearch(false);
       App.showHome(false);
       App.showFooter(false)
-      App.showMovieDetails(false);
+      App.showMoviePreview(false);
     }
     App.render();
     App.bindEvents();
