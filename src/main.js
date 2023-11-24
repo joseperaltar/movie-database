@@ -1,5 +1,5 @@
 import { fetchInfo } from "./js/apiHandler.js";
-import { renderMovieDetails, renderMovies } from "./js/render.js";
+import { renderMoviePreview, renderMovies, renderMovieInformation } from "./js/render.js";
 import { navigator } from "./js/navigator.js";
 
 const ENDPOINTS = {
@@ -59,7 +59,7 @@ async function getParams() {
 
 const App = {
   $: {
-    header: document.querySelector(".app-header"),
+    search: document.querySelector(".search"),
     barnav: document.querySelector(".barnav"),
     title: document.querySelector(".barnav h1"),
     searchButton: document.querySelector(".search_button"),
@@ -71,19 +71,26 @@ const App = {
     searchResults: document.querySelector(".search-results"),
     searchResultsList: document.querySelector(".search-results_list"),
     searchResultTitle: document.querySelector(".search-results .subtitle"),
+    recommendMovies: document.querySelector(".recommendations-preview"),
+    recommendMoviesList: document.querySelector(".recommendations-preview_list"),
     movieDetails: document.querySelector(".movie-details"),
+    movieInformation: document.querySelector(".movie-information"),
+    viewMoreButton: document.querySelector(".view-more"),
     backButton: document.querySelector(".back_button"),
     footer: document.querySelector(".footer"),
   },
 
-  context: {trendingMovies: [], popularMovies: [], searchedMovies: []},
+  context: {trendingMovies: [], popularMovies: [], searchedMovies: [], recommendMovies: []},
   setContext: (contextKey, newContextValue) => {
     App.context[contextKey] = newContextValue;
   },
 
 
-  showHeader: (show)=>{
-    App.$.header.style.display = show ? "block" : "none";
+  showSearchBar: (show)=>{
+    App.$.search.style.display = show ? "flex" : "none";
+  },
+  showBarnav: (show)=>{
+    App.$.barnav.style.display = show ? "flex" : "none";
     App.$.barnav.classList.remove("hide");
     App.$.barnav.classList.remove("show");
   },
@@ -97,37 +104,56 @@ const App = {
   showFooter: (show)=>{
     App.$.footer.style.display = show ? "flex" : "none";
   },
-  showMovieDetails: (show)=>{
+  showMoviePreview: (show)=>{
     App.$.movieDetails.style.display = show ? "block" : "none";
   },
+  showMovieInformation: (show)=>{
+    App.$.movieInformation.style.display = show ? "block" : "none";
+  },
   renderHome: async ()=>{
-    App.showHeader(true);
+    App.showSearchBar(true);
+    App.showBarnav(true);
     App.showHome(true);
     App.showFooter(true);
     App.showSearch(false);
-    App.showMovieDetails(false);
+    App.showMoviePreview(false);
+    App.showMovieInformation(false);
 
-    App.setContext("trendingMovies", await API.fetchMovies(""));
-    App.setContext("popularMovies", await fetchInfo(ENDPOINTS.movie+"popular"));
+    const trendingMovies = await API.fetchMovies("");
+    const popularMovies = await fetchInfo(ENDPOINTS.movie+"popular");
+
+    App.setContext("trendingMovies", trendingMovies);
+    App.setContext("popularMovies", popularMovies.results);
 
     renderMovies(App.context.trendingMovies, App.$.trendingPreviewList);
-    renderMovies(App.context.popularMovies.results, App.$.popularPreviewList);
+    renderMovies(App.context.popularMovies, App.$.popularPreviewList);
   },
   renderSearch: async () => {
-    App.showHeader(true);
+    App.showBarnav(true);
+    App.showSearchBar(true);
     App.showSearch(true);
     App.showHome(false);
-    App.showMovieDetails(false);
+    App.showMoviePreview(false);
+    App.showMovieInformation(false);
     const params = await getParams()
     App.setContext("searchedMovies", await API.fetchMovies({"query": params.search}));
     renderMovies(App.context.searchedMovies, App.$.searchResultsList);
     App.$.searchResultTitle.innerText = `Showing results for ${params.search}`;
   },
   renderMovie: async ()=>{
+    App.showBarnav(true);
+    App.showFooter(true);
+    App.showMovieInformation(true);
+    App.showSearchBar(false);
+    App.showMoviePreview(false);
+    App.showSearch(false);
+    App.showHome(false);
     const params = await getParams();
     const movie = await fetchInfo(ENDPOINTS.movie+params.movie);
-    renderMovieDetails(movie);
-    App.showMovieDetails(true);
+    const recommendedMovies = await fetchInfo(ENDPOINTS.movie+params.movie+"/recommendations");
+    App.setContext("recommendMovies", recommendedMovies.results)
+    renderMovieInformation(movie);
+    renderMovies(recommendedMovies.results, App.$.recommendMoviesList);
   },
   bindEvents: () => {
     /* Home redirect */
@@ -163,24 +189,30 @@ const App = {
     App.$.trendingPreviewList.addEventListener("click", (e)=>{
       if(e.target.tagName === "IMG") {
        const movie = App.context.trendingMovies.find((movie)=>movie.id === Number(e.target.dataset.id));
-       renderMovieDetails(movie);
-       App.showMovieDetails(true);
+       renderMoviePreview(movie);
+       App.showMoviePreview(true);
       }
     });
     App.$.popularPreviewList.addEventListener("click", (e)=>{
       if(e.target.tagName === "IMG") {
-       const movie = App.context.trendingMovies.find((movie)=>movie.id === Number(e.target.dataset.id));
-       renderMovieDetails(movie);
-       App.showMovieDetails(true);
+       const movie = App.context.popularMovies.find((movie)=>movie.id === Number(e.target.dataset.id));
+       renderMoviePreview(movie);
+       App.showMoviePreview(true);
       }
     });
     App.$.searchResultsList.addEventListener("click", (e)=>{
       if(e.target.tagName === "IMG") {
        const movie = App.context.searchedMovies.find((movie)=>movie.id === Number(e.target.dataset.id));
-       renderMovieDetails(movie);
-       App.showMovieDetails(true);
+       renderMoviePreview(movie);
+       App.showMoviePreview(true);
       }
-
+    });
+    App.$.recommendMoviesList.addEventListener("click", (e)=>{
+      if(e.target.tagName === "IMG") {
+       const movie = App.context.recommendMovies.find((movie)=>movie.id === Number(e.target.dataset.id));
+       renderMoviePreview(movie);
+       App.showMoviePreview(true);
+      }
     });
   },
 
@@ -196,10 +228,10 @@ const App = {
 
   init: async ()=>{
     if(history.oldUrl === "") {
-      App.showHeader(false);
+      App.showSearch(false);
       App.showHome(false);
       App.showFooter(false)
-      App.showMovieDetails(false);
+      App.showMoviePreview(false);
     }
     App.render();
     App.bindEvents();
