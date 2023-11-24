@@ -8,7 +8,15 @@ const api = axios.create({
 
 async function fetchInfo(endpoint, query) {
   const {data} = query !== "" ? await api(endpoint, {params: query}): await api(endpoint);
-  return data;
+  let x = 0;
+
+  return await new Promise((resolve)=>{
+    setTimeout(()=>{
+      resolve(data);
+    }, 2000)
+  });
 }
+
+
 
 export { fetchInfo };

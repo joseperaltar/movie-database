@@ -23,12 +23,6 @@ function renderMovies(movies, container) {
     movieImage.dataset.id = movie.id;
     return movieContainer;
   });
-
-  container.addEventListener("click", (e)=>{
-    if(e.target.tagName === "IMG") {
-      location.hash = `movie=${e.target.dataset.id}`;
-    }
-  })
   container.append(...movieEL);
 }
 
@@ -42,7 +36,7 @@ function renderMovieDetails(movie) {
   
   movieEL.banner.src = `https://image.tmdb.org/t/p/w300${movie.poster_path}`
   movieEL.title.innerText = movie.original_title;
-  movieEL.rating.innerText = movie.vote_average.toFixed(1)+ ` ⭐`;
+  movieEL.rating.innerText = movie.vote_average.toFixed(1);
   movieEL.overview.innerText = movie.overview;
 }
 
