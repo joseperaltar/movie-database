@@ -1,0 +1,53 @@
+/* Animations */
+
+.hide {
+  animation: hidebar .2s linear forwards;
+}
+
+.show {
+  animation: showbar .2s linear forwards;
+}
+
+.slidein {
+  animation: slidein .2s linear forwards;
+}
+
+.slideout {
+  animation: slideout .2s linear forwards;
+}
+
+@keyframes hidebar {
+  from {
+      top: 0;
+  }
+  to {
+      top: -60px
+  }
+}
+
+@keyframes showbar {
+  from {
+    top: -60px;
+  }
+  to {
+      top: 0;
+  }
+}
+
+@keyframes slidein {
+  from {
+    top: 100vh;
+  }
+  to {
+    top: 0;
+  }
+}
+
+@keyframes slideout {
+  from {
+    top: 0vh;
+  }
+  to {
+    top: 100vh;
+  }
+}

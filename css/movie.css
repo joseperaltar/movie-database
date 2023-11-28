@@ -1,0 +1,27 @@
+.movie {
+  width: 120px;
+  cursor: pointer;
+  transition: .2s ease all;
+}
+
+.movie:hover {
+  background-color: #d4d4d4;
+  transform: scale(1.1);
+}
+
+.movie img {
+  width: 120px;
+}
+
+.movie .movie_title {
+  font-size: var(--md);
+  font-weight: bold;
+}
+
+.movie .movie_release-date {
+  font-size: var(--sm);
+}
+
+.movie_rating::after {
+  content: "⭐";
+}

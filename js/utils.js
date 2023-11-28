@@ -5,4 +5,14 @@ function formatDuration(duration) {
   return totalTime;
 }
 
-export { formatDuration };
+async function getParams() {
+  const  params = location.hash.replace("#", "").split("&");
+  let parsedParams = {};
+  params.forEach(parameter=>{
+    const [key, value] = parameter.split("=");
+    parsedParams[key] = value;
+  })
+  return parsedParams;
+}
+
+export { formatDuration, getParams };
