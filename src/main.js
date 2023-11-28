@@ -1,6 +1,7 @@
 import { fetchInfo } from "./js/apiHandler.js";
 import { renderMoviePreview, renderMovies, renderMovieInformation } from "./js/render.js";
 import { navigator } from "./js/navigator.js";
+import { getParams } from "./js/utils.js";
 
 const ENDPOINTS = {
   trending: "/trending/movie/day",
@@ -13,7 +14,7 @@ const ENDPOINTS = {
 let history = {
   oldUrl: "",
   newUrl: "",
-  scroll: ""
+  scroll: 0
 };
 
 function bindExternalEvents() {
@@ -47,15 +48,7 @@ const API = {
   },
 }
 
-async function getParams() {
-  const  params = location.hash.replace("#", "").split("&");
-  let parsedParams = {};
-  params.forEach(parameter=>{
-    const [key, value] = parameter.split("=");
-    parsedParams[key] = value;
-  })
-  return parsedParams;
-}
+
 
 const App = {
   $: {
@@ -73,7 +66,7 @@ const App = {
     searchResultTitle: document.querySelector(".search-results .subtitle"),
     recommendMovies: document.querySelector(".recommendations-preview"),
     recommendMoviesList: document.querySelector(".recommendations-preview_list"),
-    movieDetails: document.querySelector(".movie-details"),
+    movieDetails: document.querySelector(".movie-details_blur"),
     movieInformation: document.querySelector(".movie-information"),
     viewMoreButton: document.querySelector(".view-more"),
     backButton: document.querySelector(".back_button"),
